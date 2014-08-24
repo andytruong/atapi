@@ -1,0 +1,26 @@
+<?php
+
+use Drupal\atapi\Config\Loader\YamlLoader;
+use Drupal\atapi\Config\RouteConfiguration;
+use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Loader\DelegatingLoader;
+use Symfony\Component\Config\Loader\LoaderResolver;
+
+function __test()
+{
+    $locator = new FileLocator(array(__DIR__ . '/config/'));
+
+    $loaderResolver = new LoaderResolver(array(new YamlLoader($locator)));
+    $loader = new DelegatingLoader($loaderResolver);
+
+    $config = $loader->load(__DIR__ . '/config/config.yml');
+    kpr($config);
+
+    $processor = new Processor();
+    $routeConfig = new RouteConfiguration();
+    $x = $processor->processConfiguration($routeConfig, ['routing' => $config]);
+
+    kpr($x);
+    exit;
+}

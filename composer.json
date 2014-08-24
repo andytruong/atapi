@@ -1,0 +1,20 @@
+{
+    "name": "drupal/atapi",
+    "type": "drupal-module",
+    "description": "Provide new API for Drupal 7",
+    "keywords": ["drupal", "route"],
+    "homepage": "http://v3k.net/",
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Andy Truong",
+            "email": "thehongtt@gmail.com",
+            "role": "Lead Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "symfony/yaml": "~2.5.0",
+        "symfony/config": "~2.5.0"
+    }
+}

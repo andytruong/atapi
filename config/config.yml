@@ -1,0 +1,12 @@
+routes:
+    hello:
+        title: 'Hello world'
+        access arguments: ['access content']
+        controller:
+            - ClassName
+            - methodName
+            - { variable_name: variable_value }
+        variables:
+            v1: 'Value 1'
+            v2: 'Value 2'
+            v3: { v3a: 'A', v3b: 'B' }

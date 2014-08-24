@@ -1,0 +1,8 @@
+name = AT API
+version = 7.x-0.1-dev
+description = "Provide new API for Drupal 7."
+core = 7.x
+package = "Andy Truong"
+
+dependencies[] = composer_manager
+dependencies[] = xautoload
