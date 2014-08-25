@@ -1,26 +1,48 @@
 <?php
 
 use Drupal\atapi\Config\Loader\YamlLoader;
-use Drupal\atapi\Config\RouteConfiguration;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderResolver;
 
+/**
+ * Get modules which depends on atapi module.
+ */
+function atapi_modules()
+{
+    static $modules = array();
+
+    if (empty($modules)) {
+        $modules = array('atapi');
+        foreach (system_list('module_enabled') as $moduleInfo) {
+            if ($moduleInfo->info['dependencies'] || !in_array('atapi', $moduleInfo->info['dependencies'])) {
+                continue;
+            }
+            $modules[] = $moduleInfo->name;
+        }
+    }
+
+    return $modules;
+}
+
+function atapi_config($name, $configBuilderClass, $extension = 'yml')
+{
+    $paths = array();
+    foreach (atapi_modules() as $moduleName) {
+        $paths[] = drupal_get_path('module', $moduleName) . '/config/';
+    }
+    $locator = new FileLocator($paths);
+    $resolver = new LoaderResolver(array(new YamlLoader($locator)));
+    $loader = new DelegatingLoader($resolver);
+    $processor = new Processor();
+    $configBuilder = new $configBuilderClass();
+    $rawConfig = $loader->load("{$name}.{$extension}");
+    return $processor->processConfiguration($configBuilder, ['atapi' => $rawConfig]);
+}
+
 function __test()
 {
-    $locator = new FileLocator(array(__DIR__ . '/config/'));
-
-    $loaderResolver = new LoaderResolver(array(new YamlLoader($locator)));
-    $loader = new DelegatingLoader($loaderResolver);
-
-    $config = $loader->load(__DIR__ . '/config/config.yml');
-    kpr($config);
-
-    $processor = new Processor();
-    $routeConfig = new RouteConfiguration();
-    $x = $processor->processConfiguration($routeConfig, ['routing' => $config]);
-
-    kpr($x);
-    exit;
+    $configValues = atapi_config('routes', 'Drupal\atapi\Config\RouteConfiguration');
+    dsm($configValues);
 }

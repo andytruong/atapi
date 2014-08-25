@@ -10,13 +10,17 @@ class YamlLoader extends FileLoader
 
     public function load($resource, $type = null)
     {
-        $configValues = Yaml::parse($resource);
+        $rawConfig = array();
+        $paths = $this->getLocator()->locate($resource);
+        foreach (is_string($paths) ? array($paths) : $paths as $path) {
+            $rawConfig = \array_merge($rawConfig, Yaml::parse($path));
+        }
 
-        // ... handle the config values
+        // handle the config values
         // maybe import some other resource:
         // $this->import('extra_users.yml');
 
-        return $configValues;
+        return $rawConfig;
     }
 
     public function supports($resource, $type = null)
