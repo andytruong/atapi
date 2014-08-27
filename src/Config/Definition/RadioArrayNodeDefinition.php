@@ -42,7 +42,7 @@ class RadioArrayNodeDefinition extends ArrayNodeDefinition
                     throw new InvalidConfigurationException('One of these keys is required but none given: ' . implode(', ', $radioOptions));
 
                 default:
-                    throw new InvalidConfigurationException('Only one of these keys is allowed: ', implode(', ', $radioOptions));
+                    throw new InvalidConfigurationException('Only one of these keys is allowed: ' . implode(', ', $radioOptions));
             }
         }
     }
